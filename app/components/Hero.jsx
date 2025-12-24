@@ -5,13 +5,10 @@ import { ArrowRight, Play, Star, Coffee } from "lucide-react";
 const Hero = () => {
   return (
     <section className="relative min-h-screen bg-[#050505] pt-24 overflow-hidden">
-      {/* Background glow */}
       <div className="pointer-events-none absolute top-0 right-0 h-full w-1/2 rounded-full bg-amber-900/10 blur-[140px]" />
 
       <div className="mx-auto max-w-400 px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-16 items-center">
-        {/* LEFT CONTENT */}
         <div className="relative z-10 order-2 lg:order-1 text-center lg:text-left">
-          {/* Social proof */}
           <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-white/10 bg-neutral-900 px-4 py-2 mx-auto lg:mx-0">
             <div className="flex -space-x-1">
               {[...Array(3)].map((_, i) => (
@@ -62,9 +59,7 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* RIGHT VISUAL */}
         <div className="relative order-1 lg:order-2 w-full">
-          {/* Image container with fixed aspect */}
           <div className="relative aspect-4/5 sm:aspect-3/4 lg:aspect-5/5 w-full max-w-sm sm:max-w-md lg:max-w-none mx-auto overflow-hidden ">
             <Image
               src="/images/hero-coffee.png"
@@ -74,7 +69,6 @@ const Hero = () => {
               className="object-cover transition duration-700 "
             />
 
-            {/* Floating card */}
             <div className="absolute bottom-4 sm:bottom-6 left-4 right-4 sm:left-6 sm:right-6 flex items-center gap-4 rounded-2xl border border-white/10 bg-black/60 p-4 sm:p-5 backdrop-blur-md">
               <span className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-amber-500 text-black">
                 <Coffee size={20} />
@@ -90,7 +84,6 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Decorative orbs */}
           <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-amber-500/10 blur-2xl hidden sm:block" />
           <div className="absolute -bottom-12 -left-12 h-40 w-40 rounded-full bg-white/5 blur-3xl hidden sm:block" />
         </div>

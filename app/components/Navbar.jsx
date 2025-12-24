@@ -63,7 +63,6 @@ const Navbar = () => {
           href="/"
           className="group flex items-center gap-3 text-xl font-bold tracking-tighter text-white"
         >
-          {/* Logo Image */}
           <motion.div className="relative">
             <Image
               src="/logos/brandlogo.png"
@@ -74,11 +73,11 @@ const Navbar = () => {
               className="object-cover rounded-xl"
             />
           </motion.div>
-
-          {/* Brand Text */}
         </Link>
 
-        <nav className={`hidden md:flex items-center gap-8 ${raleway.className}`}>
+        <nav
+          className={`hidden md:flex items-center gap-8 ${raleway.className}`}
+        >
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (

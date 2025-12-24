@@ -33,14 +33,14 @@ export default function Footer() {
 
                     <div className="lg:col-span-7 w-full">
                         <div className="space-y-4 max-w-md lg:ml-auto">
-                            <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-[0.5em]">The Newsletter Protocol</span>
+                            <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-[0.5em]">The Newsletter Protocol</span>
                             <form className="relative group">
                                 <input
                                     type="email"
                                     placeholder="IDENTITY@EMAIL.COM"
-                                    className="w-full bg-transparent border-b border-white/20 py-4 font-mono text-sm tracking-widest focus:outline-none focus:border-amber-500 transition-all placeholder:text-neutral-800 uppercase text-white"
+                                    className="w-full bg-transparent border-b border-white/20 py-4 font-mono text-sm tracking-widest focus:outline-none focus:border-amber-500 transition-all placeholder:text-neutral-400 uppercase text-white"
                                 />
-                                <button className="absolute right-0 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-amber-500 transition-all flex items-center gap-2 group/btn">
+                                <button className="absolute right-0 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-amber-500 transition-all flex items-center gap-2 group/btn">
                                     <span className="text-[9px] font-mono opacity-0 group-hover/btn:opacity-100 transition-opacity">CONNECT</span>
                                     <ArrowRight size={20} className="group-hover/btn:translate-x-1 transition-transform" />
                                 </button>
@@ -57,7 +57,7 @@ export default function Footer() {
                         <Link
                             key={link}
                             href={`/${link.toLowerCase()}`}
-                            className="text-lg font-serif italic tracking-tight text-neutral-500 hover:text-white transition-all duration-500 hover:translate-x-2 flex items-center gap-2 group"
+                            className="text-lg font-serif italic tracking-tight text-neutral-400 hover:text-white transition-all duration-500 hover:translate-x-2 flex items-center gap-2 group"
                         >
                             <span className="text-amber-500/40 font-mono text-[10px] group-hover:text-amber-500 transition-colors">0{navLinks.indexOf(link) + 1}</span>
                             {link}
@@ -70,12 +70,12 @@ export default function Footer() {
                     <div className="flex items-center gap-6 order-2 md:order-1">
                         <div className="flex items-center gap-2">
                             <ShieldCheck size={12} className="text-amber-500/50" />
-                            <span className="text-[10px] font-mono text-neutral-600 uppercase tracking-[0.2em]">
+                            <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-[0.2em]">
                                 © {currentYear} BLACK DROP COFFEE // ALL RIGHTS RESERVED
                             </span>
                         </div>
                         <div className="hidden lg:block h-3 w-px bg-white/10" />
-                        <span className="hidden lg:block text-[9px] font-mono text-neutral-800 uppercase tracking-widest">
+                        <span className="hidden lg:block text-[9px] font-mono text-neutral-400 uppercase tracking-widest">
                             Afterrender_Ref_v4.0
                         </span>
                     </div>
@@ -88,7 +88,7 @@ export default function Footer() {
                         ].map((social) => (
                             <Link key={social.label} href="#" className="flex items-center gap-2 group">
                                 <social.icon size={14} className="text-neutral-700 group-hover:text-amber-500 transition-colors" />
-                                <span className="text-[9px] font-mono text-neutral-800 group-hover:text-neutral-500 transition-colors tracking-tighter uppercase">
+                                <span className="text-[9px] font-mono text-neutral-400 group-hover:text-neutral-400 transition-colors tracking-tighter uppercase">
                                     {social.label}
                                 </span>
                             </Link>

@@ -6,6 +6,7 @@ import WhyChooseUs from "./WhyChooseUs";
 import OurProcess from "./OurProcess";
 import CustomerReviews from "./CustomerReviews";
 import CoffeeGallery from "./CoffeeGallery";
+import Footer from "./Footer";
 
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
       <OurProcess />
       <CustomerReviews />
       <CoffeeGallery />
+      <Footer />
     </>
   );
 };

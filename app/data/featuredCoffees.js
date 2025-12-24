@@ -1,0 +1,38 @@
+export const featuredCoffees = [
+    {
+        id: "1",
+        name: "Seattle Dark Roast",
+        description: "Bold and smoky with a deep roasted flavor, inspired by Seattle coffee culture.",
+        price: 14.99,
+        slug: "seattle-dark-roast",
+        image: "/images/coffee/sea.png",
+        featured: true,
+    },
+    {
+        id: "2",
+        name: "California Blonde Roast",
+        description: "Smooth and bright with subtle caramel and citrus notes.",
+        price: 18.5,
+        slug: "california-blonde-roast",
+        image: "/images/coffee/cali.png",
+        featured: true,
+    },
+    {
+        id: "3",
+        name: "New York Espresso Blend",
+        description: "Intense and full-bodied, perfect for a classic espresso shot.",
+        price: 21.0,
+        slug: "new-york-espresso-blend",
+        image: "/images/coffee/newy.png",
+        featured: true,
+    },
+    {
+        id: "4",
+        name: "Miami Sunrise Blend",
+        description: "Smooth and creamy with tropical fruit undertones and a light finish.",
+        price: 24.25,
+        slug: "miami-sunrise-blend",
+        image: "/images/coffee/miami.png",
+        featured: true,
+    },
+];

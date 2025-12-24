@@ -1,6 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Play, Star, Coffee } from "lucide-react";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 const Hero = () => {
   return (
@@ -14,7 +20,7 @@ const Hero = () => {
               {[...Array(3)].map((_, i) => (
                 <span
                   key={i}
-                  className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-black"
+                  className="flex h-5 w-5 items-center justify-center rounded-full bg-[#c89365] text-black"
                 >
                   <Star size={10} fill="currentColor" />
                 </span>
@@ -26,9 +32,9 @@ const Hero = () => {
           </div>
 
           {/* Headline */}
-          <h1 className="mb-6 text-4xl sm:text-5xl md:text-6xl xl:text-8xl font-black uppercase leading-[0.95] tracking-tight text-white">
+          <h1 className={`mb-6 text-4xl sm:text-5xl md:text-6xl xl:text-8xl font-black uppercase leading-[0.95] tracking-tight text-white ${poppins.className}`}>
             Better <br />
-            <span className="italic text-amber-500">Beans.</span> <br />
+            <span className="italic text-[#c89365]">Beans.</span> <br />
             Better <span className="text-neutral-500">Days.</span>
           </h1>
 

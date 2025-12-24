@@ -5,16 +5,18 @@ import FeaturedCoffee from "./FeaturedCoffee";
 import WhyChooseUs from "./WhyChooseUs";
 import OurProcess from "./OurProcess";
 import CustomerReviews from "./CustomerReviews";
+import CoffeeGallery from "./CoffeeGallery";
 
 const Home = () => {
   return (
     <>
       <Navbar />
       <Hero />
-      <FeaturedCoffee/>
+      <FeaturedCoffee />
       <WhyChooseUs />
       <OurProcess />
       <CustomerReviews />
+      <CoffeeGallery />
     </>
   );
 };

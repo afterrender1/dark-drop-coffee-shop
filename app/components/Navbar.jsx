@@ -52,11 +52,10 @@ const Navbar = () => {
       }}
       animate={isHidden ? "hidden" : "visible"}
       transition={{ duration: 0.35, ease: "easeInOut" }}
-      className={`fixed top-0 left-0 right-0 z-100 transition-all duration-500 ${
-        isScrolled
-          ? "bg-black/60 backdrop-blur-xl py-3 border-b border-white/10"
-          : "bg-transparent py-6"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-100 transition-all duration-500 ${isScrolled
+        ? "bg-black/60 backdrop-blur-xl py-3 border-b border-white/10"
+        : "bg-transparent py-6"
+        }`}
     >
       <div className="mx-auto flex max-w-400 items-center justify-between px-6 md:px-12">
         <Link
@@ -65,12 +64,12 @@ const Navbar = () => {
         >
           <motion.div className="relative">
             <Image
-              src="/logos/brandlogo.png"
+              src="/logos/b-logo.png"
               alt="Black Drop Coffee"
-              width={140}
+              width={160}
               height={40}
               priority
-              className="object-cover rounded-xl"
+              className="object-cover "
             />
           </motion.div>
         </Link>
@@ -84,9 +83,8 @@ const Navbar = () => {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative text-[12px] font-bold uppercase tracking-[0.2em] transition-colors hover:text-white ${
-                  isActive ? "text-white" : "text-neutral-400"
-                }`}
+                className={`relative text-[12px] font-bold uppercase tracking-[0.2em] transition-colors hover:text-[#D28B4E] ${isActive ? "text-white" : "text-neutral-400"
+                  }`}
               >
                 {link.name}
                 {isActive && (

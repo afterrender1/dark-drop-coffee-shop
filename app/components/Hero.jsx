@@ -88,12 +88,12 @@ const Hero = () => {
             />
 
             <div className="group absolute inset-x-5 bottom-5 flex cursor-pointer items-center gap-5 rounded-xl border border-white/5 bg-[#0A0A0A]/80 p-4 shadow-2xl backdrop-blur-2xl transition-all duration-700 hover:border-white/20 sm:inset-x-8 sm:bottom-8">
-              <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-zinc-900 border border-white/5 shadow-inner">
+              <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg  shadow-inner">
                 <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent" />
                 <Coffee
                   size={22}
                   strokeWidth={1.5}
-                  className="relative text-amber-500 transition-transform duration-500 group-hover:scale-110"
+                  className="relative text-[#c89365] transition-transform duration-500 group-hover:scale-110"
                 />
               </div>
 

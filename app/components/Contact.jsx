@@ -17,9 +17,10 @@ export default function Contact() {
         setForm({ name: "", email: "", message: "" });
         setTimeout(() => setSubmitted(false), 4000);
     };
+    
 
     return (
-        <section className="py-32 bg-[#050505] text-white">
+        <section id="contact" className="py-32 bg-[#050505] text-white">
             <div className="mx-auto max-w-6xl px-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
 

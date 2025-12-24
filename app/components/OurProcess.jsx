@@ -9,7 +9,7 @@ export default function OurProcess() {
     ];
 
     return (
-        <section className="py-24 bg-[#030303] text-white">
+        <section id="process" className="py-24 bg-[#030303] text-white">
             <div className="mx-auto max-w-7xl px-6">
 
                 {/* LEFT PANEL */}

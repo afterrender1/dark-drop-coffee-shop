@@ -10,7 +10,7 @@ const raleway = Raleway({
 
 export default function FeaturedCoffee() {
     return (
-        <section className="py-32 bg-[#020202] text-white selection:bg-amber-500/30">
+        <section id="shop" className="py-32 bg-[#020202] text-white selection:bg-amber-500/30">
             <div className="mx-auto max-w-7xl px-6">
 
                 <div className="flex flex-col mb-16 space-y-4">

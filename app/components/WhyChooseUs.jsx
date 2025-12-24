@@ -37,7 +37,7 @@ export default function WhyChooseUs() {
     ];
 
     return (
-        <section className="py-32 bg-[#020202] text-white ">
+        <section id="about" className="py-32 bg-[#020202] text-white ">
             <div className="mx-auto max-w-7xl px-6">
 
                 {/* Header */}

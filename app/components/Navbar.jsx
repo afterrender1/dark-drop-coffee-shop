@@ -19,11 +19,12 @@ const raleway = Raleway({
 });
 
 const navLinks = [
-  { name: "Shop", href: "/shop" },
-  { name: "Coffee", href: "/coffee" },
-  { name: "About", href: "/about" },
-  { name: "Contact", href: "/contact" },
+  { name: "Coffee", href: "#shop" },
+  { name: "Process", href: "#process" },
+  { name: "About", href: "#about" },
+  { name: "Contact", href: "#contact" },
 ];
+
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,6 +32,15 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { scrollY } = useScroll();
+  const handleClick = (e, href) => {
+    e.preventDefault();
+    const id = href.replace("#", "");
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      setIsOpen(false);
+    }
+  };
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
@@ -81,6 +91,9 @@ const Navbar = () => {
             const isActive = pathname === link.href;
             return (
               <Link
+                onClick={(e) => handleClick(e, link.href)}
+
+
                 key={link.href}
                 href={link.href}
                 className={`relative text-[12px] font-bold uppercase tracking-[0.2em] transition-colors hover:text-[#D28B4E] ${isActive ? "text-white" : "text-neutral-400"

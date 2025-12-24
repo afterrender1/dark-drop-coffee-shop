@@ -1,4 +1,3 @@
-"use client"
 import Image from "next/image";
 import Link from "next/link";
 import { featuredCoffees } from "../data/featuredCoffees";
@@ -44,7 +43,7 @@ export default function FeaturedCoffee() {
                                     />
 
                                     <div className="absolute inset-x-0 bottom-8 flex justify-center z-20 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                                        <button className="cursor-pointer px-12 py-5 bg-white text-black hover:text-white text-[11px] font-black uppercase tracking-[0.3em] hover:bg-[#c89365] transition-colors">
+                                        <button className={`cursor-pointer px-12 py-5 bg-white text-black hover:text-white text-[11px] font-black uppercase tracking-[0.3em] hover:bg-[#c89365] transition-colors ${raleway.className}`}>
                                             Acquire Product — ${coffee.price}
                                         </button>
                                     </div>

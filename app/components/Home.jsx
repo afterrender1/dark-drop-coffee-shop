@@ -4,6 +4,7 @@ import Hero from "./Hero";
 import FeaturedCoffee from "./FeaturedCoffee";
 import WhyChooseUs from "./WhyChooseUs";
 import OurProcess from "./OurProcess";
+import CustomerReviews from "./CustomerReviews";
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
       <FeaturedCoffee/>
       <WhyChooseUs />
       <OurProcess />
+      <CustomerReviews />
     </>
   );
 };

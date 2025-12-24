@@ -28,7 +28,7 @@ export default function OurProcess() {
                                 <span className="italic font-extralight text-neutral-500">Process.</span>
                             </h2>
                         </div>
-                        <p className="text-neutral-500 text-sm font-light leading-relaxed max-w-[280px]">
+                        <p className="text-neutral-500 text-sm font-light leading-relaxed max-w-70">
                             A precise chronological study of coffee science, from origin to extraction.
                         </p>
                         <div className="pt-10">
@@ -43,7 +43,7 @@ export default function OurProcess() {
                             return (
                                 <div
                                     key={step.id}
-                                    className="group relative border-b border-white/5 py-10 transition-all duration-500 hover:bg-white/[0.01] cursor-pointer"
+                                    className="group relative border-b border-white/5 py-10 transition-all duration-500 hover:bg-white/1 cursor-pointer"
                                 >
                                     <div className="flex items-center justify-between relative z-10">
 

@@ -73,7 +73,7 @@ export default function FeaturedCoffee() {
                       onClick={() => {
                         console.log(coffee.id);
                       }}
-                      className={`cursor-pointer px-12 py-5 bg-white text-black hover:text-white text-[11px] font-black uppercase tracking-[0.3em] hover:bg-[#c89365] transition-colors ${raleway.className}`}
+                      className={`cursor-pointer px-8 py-5 bg-white text-black hover:text-white text-[11px] font-black uppercase tracking-[0.3em] hover:bg-[#c89365] transition-colors ${raleway.className}`}
                     >
                       Add To Cart — ${coffee.price}
                     </button>

@@ -1,7 +1,7 @@
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
 export const metadata = {
-  title: "Black Drop | Premium Specialty Coffee",
+  title: "Dark Drop | Premium Specialty Coffee",
   description:
     "Black Drop is a premium specialty coffee brand delivering bold flavors, expertly roasted beans, and an unforgettable coffee experience.",
 };

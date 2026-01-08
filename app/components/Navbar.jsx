@@ -233,7 +233,7 @@ const Navbar = () => {
                         <Image
                           src={item.image}
                           fill
-                          className="object-contain p-2 grayscale group-hover:grayscale-0 transition-all duration-500"
+                          className="object-contain p-2  transition-all duration-500"
                           alt={item.name}
                         />
                       </div>
@@ -314,6 +314,63 @@ const Navbar = () => {
         )}
       </AnimatePresence>
       {/* ... Mobile Nav Presence Remains Same ... */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-0 z-150 bg-black md:hidden"
+          >
+            {/* Background Subtle Gradient */}
+            <div className="absolute inset-0 opacity-40 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(200,147,101,0.05)_0%,transparent_100%)]" />
+
+            <nav className="relative z-20 flex h-full flex-col items-center justify-center gap-10">
+              {navLinks.map((link, i) => (
+                <motion.div
+                  key={link.href}
+                  initial={{ y: 40, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: 20, opacity: 0 }}
+                  transition={{
+                    delay: 0.1 * i,
+                    duration: 0.6,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                >
+                  <Link
+                    href={link.href}
+                    onClick={(e) => handleClick(e, link.href)}
+                    className="group flex flex-col items-center"
+                  >
+                    <span className="text-5xl font-serif italic tracking-tighter text-white group-hover:text-[#c89365] transition-colors">
+                      {link.name}
+                    </span>
+                    {/* Animated Underline */}
+                    <motion.div className="h-px bg-[#c89365] w-0 group-hover:w-full transition-all duration-500" />
+                  </Link>
+                </motion.div>
+              ))}
+
+              {/* Bottom Contact Detail in Menu */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="absolute bottom-12 text-center"
+              >
+                <p className="text-[9px] uppercase tracking-[0.5em] text-neutral-500 mb-2">
+                  Based in Seattle
+                </p>
+                <p className="text-[11px] font-mono text-[#c89365]">
+                  hello@boutiquecoffee.com
+                </p>
+              </motion.div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };

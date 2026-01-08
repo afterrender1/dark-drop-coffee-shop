@@ -104,7 +104,7 @@ const Hero = () => {
                   </span>
                   <span className="h-px w-8 bg-zinc-800 transition-all duration-500 group-hover:w-12 group-hover:bg-amber-500/50" />
                 </div>
-
+<Link href="/product/4" className="flex items-center gap-1">
                 <div className="flex flex-col">
                   <h3 className="text-base font-medium tracking-tight text-zinc-100 sm:text-lg">
                     Sumatra Gayo
@@ -114,6 +114,7 @@ const Hero = () => {
                     Dark Roast
                   </p>
                 </div>
+                </Link>
               </div>
 
               <div className="ml-auto flex items-center gap-4">

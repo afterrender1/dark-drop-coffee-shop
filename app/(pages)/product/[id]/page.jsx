@@ -1,22 +1,42 @@
-"use client"; // Required for Redux hooks
+"use client";
 
-import { featuredCoffees } from "@/app/data/featuredCoffees";
-import Image from "next/image";
-import Link from "next/link";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useDispatch } from "react-redux";
+import Image from "next/image";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check, ArrowRight } from "lucide-react";
+import { Inter } from "next/font/google";
+
+import { featuredCoffees } from "@/app/data/featuredCoffees";
 import { addToCart } from "@/app/lib/features/cart/cartSlice";
 import Navbar from "@/app/components/Navbar";
+import Footer from "@/app/components/Footer";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-inter",
+});
 
 export default function CoffeeDetailPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const [added, setAdded] = useState(false);
 
   const coffee = featuredCoffees.find((c) => c.id === id);
 
+  const handleAddToCart = () => {
+    dispatch(addToCart(coffee));
+    setAdded(true);
+    // Reset the button state after 2 seconds
+    setTimeout(() => setAdded(false), 2000);
+  };
+
   if (!coffee)
     return (
-      <div className="text-white p-20 font-serif min-h-screen bg-[#050505]">
+      <div className="text-white p-20 font-serif min-h-screen bg-[#050505] flex items-center justify-center">
         Product Not Found
       </div>
     );
@@ -24,13 +44,50 @@ export default function CoffeeDetailPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-[#050505] text-white selection:bg-[#c89365]/30 selection:text-white">
-        <div className="container mx-auto px-4 sm:px-8 py-8 lg:py-24 max-w-7xl">
+
+      {/* SUCCESS TOAST NOTIFICATION */}
+      <AnimatePresence>
+        {added && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, x: "-50%" }}
+            exit={{ opacity: 0, y: 20, x: "-50%" }}
+            className="fixed bottom-10 left-1/2 z-1000 w-[90%] max-w-100"
+          >
+            <div className="bg-white text-black p-4 shadow-2xl flex items-center justify-between border-l-4 border-green-500">
+              <div className="flex items-center gap-3">
+                <div className="bg-green-100 p-1 rounded-full">
+                  <Check size={16} className="text-green-600" strokeWidth={3} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest leading-none">
+                    Added to Experience
+                  </p>
+                  <p className="text-xs font-serif italic text-neutral-500">
+                    {coffee.name}
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/checkout"
+                className="text-[9px] font-bold uppercase tracking-tighter flex items-center gap-1 hover:text-amber-600 transition-colors"
+              >
+                Checkout <ArrowRight size={12} />
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div
+        className={`min-h-screen bg-[#050505] text-white selection:bg-[#c89365]/30 selection:text-white pt-20 ${inter.className}`}
+      >
+        <div className="container mx-auto px-4 sm:px-8 py-8 lg:py-16 max-w-7xl">
           {/* Navigation */}
           <nav className="mb-8 lg:mb-16">
             <Link
               href="/"
-              className="group flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-neutral-500 hover:text-white transition-all"
+              className="group inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-neutral-500 hover:text-white transition-all underline-offset-8 hover:underline"
             >
               <span className="transition-transform group-hover:-translate-x-1">
                 ←
@@ -39,7 +96,7 @@ export default function CoffeeDetailPage() {
             </Link>
           </nav>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-20 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-24 items-center">
             {/* Left: Image Section */}
             <div className="lg:col-span-7 w-full order-1">
               <div className="relative aspect-4/5 sm:aspect-square lg:aspect-4/5 w-full overflow-hidden bg-[#080808] border border-white/5 shadow-2xl rounded-sm group">
@@ -80,6 +137,7 @@ export default function CoffeeDetailPage() {
                   {coffee.description}
                 </p>
 
+                {/* Flavor Notes */}
                 <div className="grid grid-cols-3 gap-4 py-8 border-y border-white/5">
                   {["Velvet", "Dark Fruit", "Spice"].map((tag) => (
                     <div
@@ -97,30 +155,45 @@ export default function CoffeeDetailPage() {
                 </div>
               </div>
 
-              {/* Pricing & Redux Action */}
+              {/* Pricing & CTA */}
               <div className="space-y-8">
                 <div className="flex items-baseline justify-center lg:justify-start gap-4">
                   <span className="text-4xl sm:text-5xl font-light">
                     ${coffee.price}
                   </span>
-                  <span className="text-xs sm:text-sm text-neutral-600 line-through tracking-[0.2em]">
+                  <span className="text-xs sm:text-sm text-neutral-600 line-through tracking-[0.2em] font-mono">
                     $42.00
                   </span>
                 </div>
 
                 <div className="flex flex-col gap-4">
                   <button
-                    onClick={() => dispatch(addToCart(coffee))}
-                    className="w-full group relative overflow-hidden bg-white px-6 py-5 sm:py-6 transition-transform active:scale-[0.98] cursor-pointer"
+                    onClick={handleAddToCart}
+                    disabled={added}
+                    className="w-full group relative overflow-hidden bg-white px-6 py-5 sm:py-6 transition-transform active:scale-[0.98] cursor-pointer disabled:cursor-default"
                   >
-                    <span className="relative z-10 text-black group-hover:text-white text-[10px] sm:text-[11px] font-black uppercase tracking-[0.4em] transition-colors duration-500">
-                      Add To Experience
+                    <span className="relative z-10 text-black group-hover:text-white text-[10px] sm:text-[11px] font-black uppercase tracking-[0.4em] transition-colors duration-500 flex items-center justify-center gap-2">
+                      {added ? (
+                        <>
+                          <Check size={16} strokeWidth={3} /> Added to
+                          Experience
+                        </>
+                      ) : (
+                        "Add To Cart"
+                      )}
                     </span>
-                    <div className="absolute inset-0 bg-[#c89365] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)]" />
+                    {/* Hover Effect Layer */}
+                    <div
+                      className={`absolute inset-0 transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] ${
+                        added
+                          ? "bg-green-600 translate-y-0"
+                          : "bg-[#c89365] translate-y-full group-hover:translate-y-0"
+                      }`}
+                    />
                   </button>
 
-                  <p className="text-[9px] uppercase tracking-[0.3em] text-neutral-600 text-center">
-                    Free Worldwide Shipping on Curator Orders
+                  <p className="text-[9px] uppercase tracking-[0.3em] text-neutral-500 text-center">
+                    Complimentary Express Shipping on Curator Orders
                   </p>
                 </div>
               </div>
@@ -128,6 +201,7 @@ export default function CoffeeDetailPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

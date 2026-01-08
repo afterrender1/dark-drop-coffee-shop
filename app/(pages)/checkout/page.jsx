@@ -1,10 +1,21 @@
 "use client";
 
-import { useState } from "react"; // Added for loading state
-import { useSelector } from "react-redux";
+import { useState, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
-import { ShieldCheck, Truck, ArrowLeft, MapPin, Loader2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { clearCart } from "@/app/lib/features/cart/cartSlice";
+import {
+  ShieldCheck,
+  Truck,
+  ArrowLeft,
+  MapPin,
+  Loader2,
+  CheckCircle2,
+  Package,
+  Clock,
+} from "lucide-react";
 import { Inter } from "next/font/google";
 
 const inter = Inter({
@@ -16,6 +27,13 @@ export default function CheckoutPage() {
   const cartItems = useSelector((state) => state.cart.items);
   const [isLocating, setIsLocating] = useState(false);
   const [address, setAddress] = useState("");
+  const [orderStatus, setOrderStatus] = useState("idle"); // idle | processing | completed
+  const dispatch = useDispatch();
+  // Generate a random delivery time between 25 and 45 minutes
+  const deliveryTime = useMemo(
+    () => Math.floor(Math.random() * (45 - 25 + 1)) + 25,
+    []
+  );
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -24,53 +42,99 @@ export default function CheckoutPage() {
   const shipping = subtotal > 100 ? 0 : 15;
   const total = subtotal + shipping;
 
-  // ONE-CLICK LOCATION FUNCTION
   const handleGetLocation = () => {
-    if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser");
-      return;
-    }
-
+    if (!navigator.geolocation) return;
     setIsLocating(true);
-
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const { latitude, longitude } = position.coords;
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-          );
-          const data = await res.json();
-          setAddress(data.display_name);
-        } catch (error) {
-          console.error("Error fetching address:", error);
-        } finally {
-          setIsLocating(false);
-        }
-      },
-      (error) => {
-        setIsLocating(false);
-        alert(
-          "Unable to retrieve your location. Please check your permissions."
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      try {
+        const { latitude, longitude } = position.coords;
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
         );
+        const data = await res.json();
+        setAddress(data.display_name);
+      } finally {
+        setIsLocating(false);
       }
-    );
+    });
   };
 
-  if (cartItems.length === 0) {
+  const handlePlaceOrder = () => {
+    setOrderStatus("processing");
+    setTimeout(() => {
+      setOrderStatus("completed");
+      dispatch(clearCart());
+    }, 3000);
+  };
+
+  if (orderStatus === "completed") {
     return (
       <div
-        className={`min-h-screen bg-[#050505] text-white flex flex-col items-center justify-center p-6 ${inter.className}`}
+        className={`min-h-screen bg-[#050505] text-white flex items-center justify-center p-6 ${inter.className}`}
       >
-        <h2 className="text-4xl font-serif mb-6 italic opacity-80">
-          Your log is empty
-        </h2>
-        <Link
-          href="/"
-          className="text-[#c89365] uppercase tracking-[0.4em] text-[10px] border-b border-[#c89365]/30 pb-2 hover:border-[#c89365] transition-all"
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-2xl w-full bg-[#080808] border border-white/10 p-8 md:p-12 shadow-2xl rounded-sm text-center"
         >
-          Return to Collection
-        </Link>
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", damping: 12 }}
+            className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-8"
+          >
+            <CheckCircle2 size={40} className="text-green-500" />
+          </motion.div>
+
+          <h2 className="text-4xl font-serif mb-2">Order Confirmed.</h2>
+          <p className="text-neutral-500 text-sm uppercase tracking-[0.3em] mb-12">
+            Transaction ID: #BE-{Math.floor(Math.random() * 1000000)}
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 text-left">
+            <div className="bg-white/5 p-6 border border-white/5">
+              <Clock className="text-[#c89365] mb-3" size={20} />
+              <p className="text-[10px] uppercase tracking-widest text-neutral-500 mb-1">
+                Estimated Arrival
+              </p>
+              <p className="text-xl font-bold">{deliveryTime} Minutes</p>
+            </div>
+            <div className="bg-white/5 p-6 border border-white/5">
+              <Package className="text-[#c89365] mb-3" size={20} />
+              <p className="text-[10px] uppercase tracking-widest text-neutral-500 mb-1">
+                Items Prepared
+              </p>
+              <p className="text-xl font-bold">{cartItems.length} Products</p>
+            </div>
+          </div>
+
+          <div className="space-y-4 mb-12">
+            {cartItems.map((item) => (
+              <div
+                key={item.id}
+                className="flex justify-between items-center text-sm border-b border-white/5 pb-2"
+              >
+                <span className="text-neutral-400">
+                  {item.quantity}x {item.name}
+                </span>
+                <span className="font-mono">
+                  ${(item.price * item.quantity).toFixed(2)}
+                </span>
+              </div>
+            ))}
+            <div className="flex justify-between pt-4 text-lg font-bold">
+              <span>Total Paid</span>
+              <span className="text-[#c89365]">${total.toFixed(2)}</span>
+            </div>
+          </div>
+
+          <Link
+            href="/"
+            className="inline-block w-full bg-white text-black py-5 font-black uppercase tracking-[0.4em] text-[10px] hover:bg-[#c89365] hover:text-white transition-all"
+          >
+            Return to Store
+          </Link>
+        </motion.div>
       </div>
     );
   }
@@ -79,6 +143,22 @@ export default function CheckoutPage() {
     <div
       className={`min-h-screen bg-[#050505] text-white pt-24 pb-12 ${inter.className}`}
     >
+      <AnimatePresence>
+        {orderStatus === "processing" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-100 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center"
+          >
+            <Loader2 size={48} className="text-[#c89365] animate-spin mb-6" />
+            <p className="text-[10px] uppercase tracking-[0.6em] animate-pulse">
+              Authenticating Transaction...
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="container mx-auto px-4 max-w-6xl">
         <Link
           href="/"
@@ -92,79 +172,66 @@ export default function CheckoutPage() {
             <section>
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-[11px] uppercase tracking-[0.5em] text-[#c89365] font-black flex items-center gap-4 flex-1">
-                  01. Shipping Information{" "}
-                  <div className="h-px flex-1 bg-white/10" />
+                  01. Shipping <div className="h-px flex-1 bg-white/10" />
                 </h2>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  placeholder="First Name"
-                  className="bg-white/5 border border-white/10 p-4 focus:border-[#c89365] outline-none transition-colors text-sm placeholder:text-neutral-600"
-                />
-                <input
-                  type="text"
-                  placeholder="Last Name"
-                  className="bg-white/5 border border-white/10 p-4 focus:border-[#c89365] outline-none transition-colors text-sm placeholder:text-neutral-600"
-                />
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  className="md:col-span-2 bg-white/5 border border-white/10 p-4 focus:border-[#c89365] outline-none transition-colors text-sm placeholder:text-neutral-600"
-                />
-
-                {/* AUTO-FILLED ADDRESS FIELD */}
-                <textarea
-                  placeholder="Street Address"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  rows={3}
-                  className="md:col-span-2 bg-white/5 border border-white/10 p-4 focus:border-[#c89365] outline-none transition-colors text-sm placeholder:text-neutral-600 resize-none"
-                />
-                {/* ONE-CLICK LOCATION BUTTON */}
                 <button
                   onClick={handleGetLocation}
                   disabled={isLocating}
-                  className="ml-4 cursor-pointer flex items-center gap-2 text-[9px] uppercase tracking-widest text-neutral-400 hover:text-white transition-all disabled:opacity-50"
+                  className="cursor-pointer flex items-center gap-2 text-[9px] uppercase tracking-widest text-neutral-400 hover:text-white transition-all"
                 >
                   {isLocating ? (
                     <Loader2 size={12} className="animate-spin" />
                   ) : (
                     <MapPin size={12} className="text-green-400" />
                   )}
-                  {isLocating ? "Locating..." : "Auto-Fill Location"}
+                  {isLocating ? "Locating..." : "Auto-Fill"}
                 </button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  placeholder="First Name"
+                  className="bg-white/5 border border-white/10 p-4 outline-none text-sm"
+                />
+                <input
+                  type="text"
+                  placeholder="Last Name"
+                  className="bg-white/5 border border-white/10 p-4 outline-none text-sm"
+                />
+                <textarea
+                  placeholder="Street Address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  rows={3}
+                  className="md:col-span-2 bg-white/5 border border-white/10 p-4 outline-none text-sm resize-none"
+                />
               </div>
             </section>
 
             <section>
               <h2 className="text-[11px] uppercase tracking-[0.5em] text-[#c89365] font-black mb-8 flex items-center gap-4">
-                02. Payment Method <div className="h-px flex-1 bg-white/10" />
+                02. Payment <div className="h-px flex-1 bg-white/10" />
               </h2>
-              <div className="bg-white/5 border border-white/10 p-6 rounded-sm space-y-4">
+              <div className="bg-white/5 border border-white/10 p-6 space-y-4">
                 <div className="flex items-center gap-4 border-b border-white/5 pb-4">
-                  <div className="h-3 w-3 rounded-full border-2 border-[#c89365] bg-[#c89365]" />
+                  <div className="h-3 w-3 rounded-full bg-[#c89365]" />
                   <span className="text-[10px] uppercase tracking-widest font-bold">
-                    Credit / Debit Card
+                    Credit Card
                   </span>
                 </div>
-                <div className="grid grid-cols-1 gap-4 pt-2">
-                  <input
-                    type="text"
-                    placeholder="Card Number"
-                    className="bg-transparent border-none outline-none text-sm placeholder:text-neutral-700"
-                  />
-                </div>
+                <input
+                  type="text"
+                  placeholder="Card Number"
+                  className="bg-transparent border-none outline-none text-sm w-full"
+                />
               </div>
             </section>
           </div>
 
-          {/* SUMMARY SIDEBAR */}
           <div className="lg:col-span-5">
-            <div className="sticky top-32 bg-[#080808] border border-white/5 p-8 shadow-2xl rounded-sm">
+            <div className="sticky top-32 bg-[#080808] border border-white/5 p-8 shadow-2xl">
               <h3 className="text-[11px] uppercase tracking-[0.5em] font-black mb-8 text-neutral-400">
-                Order Summary
+                Review Items
               </h3>
               <div className="space-y-6 max-h-[40vh] overflow-y-auto mb-8 pr-2 custom-scrollbar">
                 {cartItems.map((item) => (
@@ -176,66 +243,50 @@ export default function CheckoutPage() {
                         fill
                         className="object-contain p-2 grayscale brightness-125"
                       />
-                      <span className="absolute -top-2 -right-2 bg-[#c89365] text-black text-[9px] font-black h-5 w-5 flex items-center justify-center rounded-full shadow-lg">
+                      <span className="absolute -top-2 -right-2 bg-[#c89365] text-black text-[9px] font-black h-5 w-5 flex items-center justify-center rounded-full">
                         {item.quantity}
                       </span>
                     </div>
-                    <div className="flex-1 space-y-1">
-                      <h4 className="text-[11px] uppercase font-black tracking-widest text-white leading-tight">
+                    <div className="flex-1">
+                      <h4 className="text-[11px] uppercase font-black text-white">
                         {item.name}
                       </h4>
                       <p className="text-[9px] text-neutral-500 italic font-serif">
-                        {item.origin || "Exclusive Selection"}
+                        {item.origin}
                       </p>
                     </div>
-                    <span className="text-[11px] font-bold text-white tracking-widest">
+                    <span className="text-[11px] font-bold text-white">
                       ${(item.price * item.quantity).toFixed(2)}
                     </span>
                   </div>
                 ))}
               </div>
 
-              <div className="border-t border-white/10 pt-6 space-y-4">
-                <div className="flex justify-between text-[10px] text-neutral-500 uppercase tracking-widest">
+              <div className="border-t border-white/10 pt-6 space-y-4 text-[10px] uppercase tracking-widest">
+                <div className="flex justify-between text-neutral-500">
                   <span>Subtotal</span>
                   <span className="text-white">${subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-[10px] text-neutral-500 uppercase tracking-widest">
+                <div className="flex justify-between text-neutral-500">
                   <span>Shipping</span>
                   <span className="text-[#c89365]">
-                    {shipping === 0
-                      ? "COMPLIMENTARY"
-                      : `$${shipping.toFixed(2)}`}
+                    {shipping === 0 ? "FREE" : `$${shipping}`}
                   </span>
                 </div>
-                <div className="flex justify-between text-2xl font-light border-t border-white/10 pt-6 mt-2">
-                  <span className="uppercase text-[9px] tracking-[0.6em] self-center text-neutral-500 font-bold">
-                    Total Due
+                <div className="flex justify-between text-2xl font-light border-t border-white/10 pt-6 mt-2 text-white">
+                  <span className="text-[9px] font-bold self-center text-neutral-500">
+                    Total
                   </span>
-                  <span className="font-medium text-white tracking-tighter">
-                    ${total.toFixed(2)}
-                  </span>
+                  <span className="tracking-tighter">${total.toFixed(2)}</span>
                 </div>
               </div>
 
-              <button className="w-full mt-10 bg-white text-black py-6 font-black uppercase tracking-[0.4em] text-[10px] hover:bg-[#c89365] hover:text-white transition-all duration-500 active:scale-95 cursor-pointer">
-                Confirm Purchase
+              <button
+                onClick={handlePlaceOrder}
+                className="w-full mt-10 bg-white text-black py-6 font-black uppercase tracking-[0.4em] text-[10px] hover:bg-[#c89365] hover:text-white transition-all active:scale-95 cursor-pointer"
+              >
+                Place Order
               </button>
-
-              <div className="mt-10 pt-6 border-t border-white/5 grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-2 opacity-20 hover:opacity-50 transition-opacity">
-                  <ShieldCheck size={12} />
-                  <span className="text-[7px] uppercase tracking-[0.3em]">
-                    AES-256 Encrypted
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 opacity-20 hover:opacity-50 transition-opacity">
-                  <Truck size={12} />
-                  <span className="text-[7px] uppercase tracking-[0.3em]">
-                    Global Logistics
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
         </div>

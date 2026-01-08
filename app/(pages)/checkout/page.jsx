@@ -1,12 +1,12 @@
 "use client";
 
+import { useState } from "react"; // Added for loading state
 import { useSelector } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
-import { ShieldCheck, Truck, ArrowLeft } from "lucide-react";
+import { ShieldCheck, Truck, ArrowLeft, MapPin, Loader2 } from "lucide-react";
 import { Inter } from "next/font/google";
 
-// Initializing Inter font
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "700", "900"],
@@ -14,6 +14,8 @@ const inter = Inter({
 
 export default function CheckoutPage() {
   const cartItems = useSelector((state) => state.cart.items);
+  const [isLocating, setIsLocating] = useState(false);
+  const [address, setAddress] = useState("");
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -21,6 +23,39 @@ export default function CheckoutPage() {
   );
   const shipping = subtotal > 100 ? 0 : 15;
   const total = subtotal + shipping;
+
+  // ONE-CLICK LOCATION FUNCTION
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
+
+    setIsLocating(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          );
+          const data = await res.json();
+          setAddress(data.display_name);
+        } catch (error) {
+          console.error("Error fetching address:", error);
+        } finally {
+          setIsLocating(false);
+        }
+      },
+      (error) => {
+        setIsLocating(false);
+        alert(
+          "Unable to retrieve your location. Please check your permissions."
+        );
+      }
+    );
+  };
 
   if (cartItems.length === 0) {
     return (
@@ -53,13 +88,15 @@ export default function CheckoutPage() {
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-          {/* LEFT: Shipping & Payment Form */}
           <div className="lg:col-span-7 space-y-12">
             <section>
-              <h2 className="text-[11px] uppercase tracking-[0.5em] text-[#c89365] font-black mb-8 flex items-center gap-4">
-                01. Shipping Information{" "}
-                <div className="h-px flex-1 bg-white/10" />
-              </h2>
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-[11px] uppercase tracking-[0.5em] text-[#c89365] font-black flex items-center gap-4 flex-1">
+                  01. Shipping Information{" "}
+                  <div className="h-px flex-1 bg-white/10" />
+                </h2>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input
                   type="text"
@@ -76,11 +113,28 @@ export default function CheckoutPage() {
                   placeholder="Email Address"
                   className="md:col-span-2 bg-white/5 border border-white/10 p-4 focus:border-[#c89365] outline-none transition-colors text-sm placeholder:text-neutral-600"
                 />
-                <input
-                  type="text"
+
+                {/* AUTO-FILLED ADDRESS FIELD */}
+                <textarea
                   placeholder="Street Address"
-                  className="md:col-span-2 bg-white/5 border border-white/10 p-4 focus:border-[#c89365] outline-none transition-colors text-sm placeholder:text-neutral-600"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  rows={3}
+                  className="md:col-span-2 bg-white/5 border border-white/10 p-4 focus:border-[#c89365] outline-none transition-colors text-sm placeholder:text-neutral-600 resize-none"
                 />
+                {/* ONE-CLICK LOCATION BUTTON */}
+                <button
+                  onClick={handleGetLocation}
+                  disabled={isLocating}
+                  className="ml-4 cursor-pointer flex items-center gap-2 text-[9px] uppercase tracking-widest text-neutral-400 hover:text-white transition-all disabled:opacity-50"
+                >
+                  {isLocating ? (
+                    <Loader2 size={12} className="animate-spin" />
+                  ) : (
+                    <MapPin size={12} className="text-green-400" />
+                  )}
+                  {isLocating ? "Locating..." : "Auto-Fill Location"}
+                </button>
               </div>
             </section>
 
@@ -106,13 +160,12 @@ export default function CheckoutPage() {
             </section>
           </div>
 
-          {/* RIGHT: Order Summary */}
+          {/* SUMMARY SIDEBAR */}
           <div className="lg:col-span-5">
             <div className="sticky top-32 bg-[#080808] border border-white/5 p-8 shadow-2xl rounded-sm">
               <h3 className="text-[11px] uppercase tracking-[0.5em] font-black mb-8 text-neutral-400">
                 Order Summary
               </h3>
-
               <div className="space-y-6 max-h-[40vh] overflow-y-auto mb-8 pr-2 custom-scrollbar">
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex gap-4">

@@ -3,6 +3,8 @@ import Image from "next/image";
 import { featuredCoffees } from "../data/featuredCoffees";
 import { Raleway } from "next/font/google";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../lib/features/cart/cartSlice";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -10,6 +12,8 @@ const raleway = Raleway({
 });
 
 export default function FeaturedCoffee() {
+  const dispatch = useDispatch();
+
   return (
     <section
       id="shop"
@@ -71,7 +75,7 @@ export default function FeaturedCoffee() {
                   <div className="flex justify-center   transition-all duration-500">
                     <button
                       onClick={() => {
-                        console.log(coffee.id);
+                        dispatch(addToCart(coffee));
                       }}
                       className={`cursor-pointer px-8 py-5 bg-white text-black hover:text-white text-[11px] font-black uppercase tracking-[0.3em] hover:bg-[#c89365] transition-colors ${raleway.className}`}
                     >

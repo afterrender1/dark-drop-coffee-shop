@@ -1,4 +1,5 @@
 import "./globals.css";
+import StoreProvider from "./StoreProvider";
 export const metadata = {
   title: "Black Drop | Premium Specialty Coffee",
   description:
@@ -11,7 +12,9 @@ export default function RootLayout({ children }) {
       <body
         className="antialiased"
       >
+        <StoreProvider>
         {children}
+        </StoreProvider>
       </body>
     </html>
   );

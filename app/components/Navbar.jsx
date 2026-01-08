@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
   motion,
   AnimatePresence,
@@ -19,7 +18,13 @@ import {
   Trash2,
 } from "lucide-react";
 import Image from "next/image";
-import { Raleway } from "next/font/google";
+import { Raleway, Inter } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-inter",
+});
 
 // 1. Redux Imports
 import { useSelector, useDispatch } from "react-redux";
@@ -146,7 +151,7 @@ const Navbar = () => {
               <ShoppingBag
                 size={20}
                 strokeWidth={1.5}
-                className="group-hover:scale-110 transition-transform"
+                className="group-hover:scale-110 cursor-pointer transition-transform"
               />
               {totalItems > 0 && (
                 <motion.span
@@ -193,7 +198,7 @@ const Navbar = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsCartOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-250"
+              className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-250 ${inter.className}`}
             />
             <motion.div
               initial={{ x: "100%" }}
@@ -205,13 +210,13 @@ const Navbar = () => {
               <div className="p-6 flex items-center justify-between border-b border-white/10 bg-black">
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.6)]" />
-                  <span className="text-[11px] font-mono uppercase tracking-[0.4em] text-white font-bold">
+                  <span className="text-[11px]  uppercase tracking-[0.2em] text-white font-bold">
                     Selection.Log
                   </span>
                 </div>
                 <button
                   onClick={() => setIsCartOpen(false)}
-                  className="text-white hover:text-amber-500 transition-colors p-1"
+                  className="text-white hover:text-amber-500 cursor-pointer transition-colors p-1"
                 >
                   <X size={20} />
                 </button>
@@ -239,43 +244,64 @@ const Navbar = () => {
                       </div>
 
                       <div className="flex flex-col justify-between py-0.5">
-                        <div className="flex justify-between items-start">
+                        <div
+                          className={`flex justify-between items-start ${inter.className}`}
+                        >
                           <div className="space-y-1">
                             <h3 className="text-[12px] font-black uppercase tracking-tight text-white leading-none">
                               {item.name}
                             </h3>
-                            <p className="text-[10px] font-serif italic text-white/80">
+                            <p className="text-[10px]  italic text-white/80">
                               {item.origin || "Exclusive Blend"}
                             </p>
                           </div>
-                          <span className="text-[11px] font-mono text-amber-500 font-bold">
+                          <span className="text-[11px]  text-amber-500 font-bold">
                             ${item.price * item.quantity}
                           </span>
                         </div>
 
                         <div className="flex items-center justify-between mt-4">
-                          <div className="flex items-center gap-5 text-[12px] font-mono text-white">
+                          <div className="flex items-center bg-white/5 border border-white/10 rounded-sm overflow-hidden backdrop-blur-md">
+                            {/* Minus Button */}
                             <button
                               onClick={() =>
                                 dispatch(decrementQuantity(item.id))
                               }
-                              className="hover:text-amber-500 transition-colors font-bold px-1"
+                              className="flex items-center justify-center w-10 h-10 hover:bg-[#c89365] hover:text-white text-neutral-400 transition-all duration-300 cursor-pointer group active:scale-90"
                             >
-                              －
+                              <Minus
+                                size={14}
+                                strokeWidth={3}
+                                className="group-hover:scale-110"
+                              />
                             </button>
-                            <span className="text-white font-black border-x border-white/10 px-3">
-                              {item.quantity.toString().padStart(2, "0")}
-                            </span>
+
+                            {/* Quantity Display */}
+                            <div className="w-12 h-10 flex items-center justify-center border-x border-white/10 relative overflow-hidden">
+                              {/* Subtle Vertical Number Glow */}
+                              <div className="absolute inset-0 bg-white/2 pointer-events-none" />
+                              <span
+                                className={`text-[13px] font-mono font-black text-white tracking-tighter ${inter.className}`}
+                              >
+                                {item.quantity.toString().padStart(2, "0")}
+                              </span>
+                            </div>
+
+                            {/* Plus Button */}
                             <button
                               onClick={() => dispatch(addToCart(item))}
-                              className="hover:text-amber-500 transition-colors font-bold px-1"
+                              className="flex items-center justify-center w-10 h-10 hover:bg-[#c89365] hover:text-white text-neutral-400 transition-all duration-300 cursor-pointer group active:scale-90"
                             >
-                              ＋
+                              <Plus
+                                size={14}
+                                strokeWidth={3}
+                                className="group-hover:scale-110"
+                              />
                             </button>
                           </div>
                           <button
                             onClick={() => dispatch(removeFromCart(item.id))}
-                            className="text-[9px] font-mono uppercase text-white/60 hover:text-red-500 transition-colors tracking-widest underline underline-offset-4"
+                            className="text-[9px] font-mono uppercase cursor-pointer text-white/60 hover:text-red-500 transition-colors tracking-widest underline underline-offset-4"
                           >
                             Remove
                           </button>
@@ -287,10 +313,12 @@ const Navbar = () => {
               </div>
 
               {/* FOOTER */}
-              <div className="p-8 bg-black border-t border-white/20 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+              <div
+                className={`p-8 bg-black border-t border-white/20 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] ${inter.className}`}
+              >
                 <div className="space-y-4 mb-8">
                   <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-mono text-white uppercase tracking-widest font-medium">
+                    <span className="text-[10px]  text-white uppercase tracking-widest font-medium">
                       Subtotal
                     </span>
                     <span className="text-xl font-black text-white tracking-tighter">
@@ -299,8 +327,8 @@ const Navbar = () => {
                   </div>
                 </div>
 
-                <button className="relative w-full h-14 bg-white text-black overflow-hidden hover:bg-amber-500 transition-all duration-300 active:scale-[0.98] group">
-                  <div className="flex items-center justify-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.4em]">
+                <button className="relative w-full cursor-pointer h-14 bg-white text-black overflow-hidden hover:bg-amber-500 transition-all duration-300 active:scale-[0.98] group">
+                  <div className="flex items-center justify-center gap-3 text-[11px] font-black uppercase tracking-[0.4em]">
                     Initiate Checkout{" "}
                     <ArrowRight
                       size={16}

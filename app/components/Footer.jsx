@@ -71,7 +71,7 @@ export default function Footer() {
                         <div className="flex items-center gap-2">
                             <ShieldCheck size={12} className="text-amber-500/50" />
                             <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-[0.2em]">
-                                © {currentYear} BLACK DROP COFFEE // ALL RIGHTS RESERVED
+                                © {currentYear} Afterrender ALL RIGHTS RESERVED
                             </span>
                         </div>
                         <div className="hidden lg:block h-3 w-px bg-white/10" />

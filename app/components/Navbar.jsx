@@ -326,16 +326,17 @@ const Navbar = () => {
                     </span>
                   </div>
                 </div>
-
-                <button className="relative w-full cursor-pointer h-14 bg-white text-black overflow-hidden hover:bg-amber-500 transition-all duration-300 active:scale-[0.98] group">
-                  <div className="flex items-center justify-center gap-3 text-[11px] font-black uppercase tracking-[0.4em]">
-                    Initiate Checkout{" "}
-                    <ArrowRight
-                      size={16}
-                      className="group-hover:translate-x-2 transition-transform"
-                    />
-                  </div>
-                </button>
+                <Link href="/checkout" className="flex items-center gap-1">
+                  <button className="relative w-full cursor-pointer h-14 bg-white text-black overflow-hidden hover:bg-amber-500 transition-all duration-300 active:scale-[0.98] group">
+                    <div className="flex items-center justify-center gap-3 text-[11px] font-black uppercase tracking-[0.4em]">
+                      Initiate Checkout{" "}
+                      <ArrowRight
+                        size={16}
+                        className="group-hover:translate-x-2 transition-transform"
+                      />
+                    </div>
+                  </button>
+                </Link>
               </div>
             </motion.div>
           </>
